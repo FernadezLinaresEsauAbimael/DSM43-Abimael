@@ -5,10 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Productos;
 use Illuminate\Http\Request;
 
+
 use Illuminate\Support\Facades\Storage;
 
 class ProductosController extends Controller
 {
+
+    function __construct() 
+    {
+        $this->middleware('permission:ver-productos | crear-productos | editar-productos | borrar-productos', ['only'=>['index']]);
+        $this->middleware('permission:ver-productos | crear-productos', ['only'=>['create','store']]);
+        $this->middleware('permission:ver-productos | editar-productos', ['only'=>['edit','update']]);
+        $this->middleware('permission:ver-productos | borrar-productos', ['only'=>['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +27,7 @@ class ProductosController extends Controller
     public function index()
     {
         //
-        $datos['productos']=Productos::paginate(20); 
+        $datos['productos']=Productos::paginate(3); 
         return view('producto.index',$datos ); 
     }
 
@@ -58,7 +68,9 @@ class ProductosController extends Controller
             'foto.required'=>'La foto es requerida',
             'clave.required'=>'La clave es requerida',
             'cantidad.required'=>'La cantidad es requerida'
-        ];
+        ]; 
+
+        
 
         $this->validate($request, $campos, $mensaje);
 

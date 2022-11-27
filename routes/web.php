@@ -7,6 +7,9 @@ use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\TiendasController; 
 use App\Http\Controllers\TiposController; 
 
+use App\Http\Controllers\CategoriasController;
+use App\Http\Controllers\RolController; 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,7 +23,7 @@ use App\Http\Controllers\TiposController;
 
 
 Route::get('/', function () {
-    return view('auth.login');
+    return view('welcome');
 });
 
 /*Route::get('/producto', function () {
@@ -33,12 +36,14 @@ Route::resource('tienda',TiendasController::class);
 
 Route::resource('tipo',TiposController::class); 
 
+
 /*
 Route::get('/usuario/create',[UsuariosController::class,'create']);
 */
 
 Route::resource('usuario',UsuariosController::class)->middleware('auth'); //Autenticar (seguridad)
-Auth::routes(['register'=>False,'reset'=>False]); //Eliminar el enlaze de registrarse y el de recordar password
+Auth::routes(['register'=>true,'reset'=>true]); //Eliminar el enlaze de registrarse y el de recordar password
+
 
 
 Route::get('/home', [UsuariosController::class, 'index'])->name('home');
@@ -47,5 +52,8 @@ Route::get('/home', [UsuariosController::class, 'index'])->name('home');
 Route::prefix(['middleware'=>'auth'], function () {
     
     Route::get('/', [UsuariosController::class, 'index'])->name('home');
+    Route::resource('Roles', RolController::class); 
 
 });
+
+//Route::get('/admin/categorias', 'Admin\CategoriasController@index')->name('admin.categorias');

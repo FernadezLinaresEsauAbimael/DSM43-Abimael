@@ -1,4 +1,11 @@
-@extends('layouts.app')
+@extends('adminlte::page')
+
+@section('title', 'Usuarios')
+
+@section('content_header')
+    <h1>Usuarios</h1>
+@stop
+
 
 @section('content')
 <div class="container">
@@ -28,15 +35,15 @@
             <tr>
 
                 <th>Id</th>
-                <th>Foto</th>
+                <th></th>
                 <th>Nombre</th>
-                <th>Apellido Paterno</th>
-                <th>Apellido Materno</th>
-                <th>Fecha de Nacimiento</th>
+                <th></th>
+                <th></th>
+                <th></th>
                 <th>Email</th>
                 <th>Pass</th>
-                <th>Nivel</th>
-                <th>Activo</th>
+                <th>Rol</th>
+                <th></th>
                 <th>Acciones</th>
 
             </tr>
@@ -49,16 +56,18 @@
                 <td>{{ $usuario->id }}</td>
 
                 <td>
-                    <img class="img-thumbnail img-fluid" src="{{ asset('storage').'/'.$usuario->foto }}" width="100" alt="">  
+                    <img class="img-thumbnail img-fluid" src="{{ asset('Archivos').'/'.$usuario->foto }}" width="100" alt="">  
                 </td>
 
                 <td>{{ $usuario->nombre }}</td>
-                <td>{{ $usuario->app }}</td>
-                <td>{{ $usuario->apm }}</td>
-                <td>{{ $usuario->fn }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td>{{ $usuario->email }}</td>
                 <td>{{ $usuario->pass }}</td>
-                <td>{{ $usuario->nivel }}</td>
+                <td>
+                    {{ $usuario->Rol}}
+                </td>
                 <td>{{ $usuario->activo }}</td>
 
                 <td>
@@ -86,6 +95,8 @@
     </tbody>
 
 </table>
+
+{!! $usuarios->links() !!}
 
 </div>
 @endsection

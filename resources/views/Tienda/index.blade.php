@@ -1,4 +1,10 @@
-@extends('layouts.app')
+@extends('adminlte::page')
+
+@section('title', 'Tiendas')
+
+@section('content_header')
+    <h1>Tiendas</h1>
+@stop
 
 @section('content')
 <div class="container">
@@ -43,7 +49,7 @@
                 <td>{{ $tienda->id }}</td>
 
                 <td>
-                    <img class="img-thumbnail img-fluid" src="{{ asset('storage').'/'.$tienda->foto }}" width="100" alt="">  
+                    <img class="img-thumbnail img-fluid" src="{{ asset('Archivos').'/'.$tienda->foto }}" width="100" alt="">  
                 </td>
 
                 <td>{{ $tienda->clave }}</td>
@@ -74,6 +80,7 @@
     </tbody>
 
 </table>
+{!! $tiendas->links() !!}
 
 </div>
 @endsection

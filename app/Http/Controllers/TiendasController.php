@@ -66,7 +66,8 @@ class TiendasController extends Controller
         Tiendas::insert($datosTienda); 
 
         //return response()->json($datosTienda);
-        return redirect('tienda')->with('mensaje','Tienda agregada con exito');
+        return redirect('tienda')->with('mensaje','Tienda agregada con exito'); 
+                                 
         
     }
 

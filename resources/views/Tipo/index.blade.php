@@ -1,4 +1,10 @@
-@extends('layouts.app')
+@extends('adminlte::page')
+
+@section('title', 'Tipos')
+
+@section('content_header')
+    <h1>Tipos</h1>
+@stop
 
 @section('content')
 <div class="container">
@@ -70,6 +76,7 @@
     </tbody>
 
 </table>
+{!! $tipos->links() !!}
 
 </div>
 @endsection

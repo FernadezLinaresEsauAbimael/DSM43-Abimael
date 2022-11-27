@@ -8,9 +8,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+//Spati
+use Spatie\Permission\Traits\HasRoles; 
+
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -41,4 +44,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    //Almacenar imagenes en la base de datos 
+    public function adminlte_image() {
+        return 'https://picsum.photos/300/300';
+    }
+
+    //Te muestra el rol que tiene el usuario logeado
+    public function adminlte_desc() {
+        return 'Administrador'; 
+    }
 }
