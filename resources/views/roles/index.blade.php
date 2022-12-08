@@ -1,43 +1,55 @@
-@extends('adminlte::page')
-
-@section('title', 'Tipos')
-
-@section('content_header')
-    <h1>Roles</h1>
-@stop
+@extends('layouts.app')
 
 @section('content')
-<div class="container">
+    <section class="section">
+        <div class="section-header">
+            <h3 class="page__heading">Roles</h3>
+        </div>
+        <div class="section-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            
+                            @can('crear-rol')
+                            <a class="btn btn-warning" href="{{ route('roles.create') }}">Nuevo</a>
+                            @endcan
 
-    @if(Session::has('mensaje'))
-    <div class="alert alert-success alert-dsmissible" rote="alert">
-        {{ Session::get('mensaje') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    @endif
+                            <table class="table table-striped mt-2">
+                                <thead style="background-color: #77ef">
+                                    <th style="color:#fff;">Id</th>
+                                    <th style="color:#fff;">Rol</th>
+                                    <th style="color:#fff;">Acciones</th>
+                                </thead>
 
+                                <tbody>
+                                @foreach ($roles as $role)
+                                    <tr>
+                                        <td>{{ $role->id }}</td>
+                                        <td>{{ $role->name }}</td>
+                                        <td>
+                                            @can('edit-rol')
+                                                <a class="btn btn-primary" href="{{ route('roles.edit' ,$role->id) }}">Editar</a>
+                                            @endcan
 
-
-
-<a href="{{ url('roles/create') }}" class="btn btn-success" > Registrar un nuevo Tipo</a>
-<br/>
-<br/>
-<table class="table table-light">
-
-    <thead class="thead-light">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    
-        @can('crear-rol')
-            <a class="btn btn-warnign" href="{{ route('roles.create }}"></a>
-        @endcan
-    
-    </tbody>
-
-</table>
-{!! $tipos->links() !!}
-
-</div>
+                                            @can('borrar-rol')
+                                                {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
+                                                    {!! Form::submit('Borrar', ['class' => 'btn btn-danger']) !!}
+                                                {!! Form::close() !!}
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                            <div class="pagination justify-content-end">
+                                {!! $roles->links() !!} 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 @endsection
+

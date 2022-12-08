@@ -1,102 +1,64 @@
-@extends('adminlte::page')
-
-@section('title', 'Usuarios')
-
-@section('content_header')
-    <h1>Usuarios</h1>
-@stop
-
+@extends('layouts.app')
 
 @section('content')
-<div class="container">
+    <section class="section">
+        <div class="section-header">
+            <h3 class="page__heading">Usuarios</h3>
+        </div>
+        <div class="section-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="text-center"></h3>
 
-    @if(Session::has('mensaje'))
-    <div class="alert alert-success alert-dsmissible" rote="alert">
-        {{ Session::get('mensaje') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    @endif
+                            <a class="btn btn-warning" href="{{ route('usuario.create') }}">Nuevo</a>
 
+                            <table class="table table-striped mt-2">
+                                <thead style="background-color: #77ef";>
+                                    <th style="color: #fff;">ID</th>
+                                    <th style="color: #fff;">Nombre</th>
+                                    <th style="color: #fff;">E-mail</th>
+                                    <th style="color: #fff;">Rol</th>
+                                    <th style="color: #fff;">Acciones</th>
+                                </thead>
+                                <tbody>
+                                    @foreach($usuarios as $usuario)
+                                        <tr>
+                                            <td>{{ $usuario->id }}</td>
+                                            <td>{{ $usuario->name }}</td>
+                                            <td>{{ $usuario->email }}</td>
+                                            <td>
+                                                @if(!empty($usuario->getRoleNames()))
+                                                    @foreach($usuario->getRoleNames() as $rolName)
+                                                    <h5><span class="badge badge-dark">{{ $rolName }}</span></h5>
+                                                    @endforeach
+                                                @endif
+                                            </td>
+                                            <td>
 
+                                                <a class="btn btn-info" href="">Detalle</a>
 
+                                                <a class="btn btn-primary" href="{{ route('usuario.edit', $usuario->id) }}">Editar</a>
 
-<a href="{{ url('usuario/create') }}" class="btn btn-success" > Registrar un nuevo Usuario</a>
-<br/>
-<br/>
-<table class="table table-light">
+                                                {!! Form::open(['method'=> 'DELETE','route'=>['usuario.destroy', $usuario->id], 'style'=>'display:inline']) !!}
+                                                    {!! Form::submit('Borrar', ['class'=> 'btn btn-danger']) !!}
+                                                {!! Form::close() !!}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            
+                            <div class="pagination justify-content-end">
+                            {!! $usuarios->links() !!}
+                            </div>
 
-    <thead class="thead-light">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    
-  
-            <tr>
-
-                <th>Id</th>
-                <th></th>
-                <th>Nombre</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>Email</th>
-                <th>Pass</th>
-                <th>Rol</th>
-                <th></th>
-                <th>Acciones</th>
-
-            </tr>
-    </thead>
-
-        <tbody>
-            @foreach( $usuarios as $usuario )
-            <tr>
-
-                <td>{{ $usuario->id }}</td>
-
-                <td>
-                    <img class="img-thumbnail img-fluid" src="{{ asset('Archivos').'/'.$usuario->foto }}" width="100" alt="">  
-                </td>
-
-                <td>{{ $usuario->nombre }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{{ $usuario->email }}</td>
-                <td>{{ $usuario->pass }}</td>
-                <td>
-                    {{ $usuario->Rol}}
-                </td>
-                <td>{{ $usuario->activo }}</td>
-
-                <td>
-
-                    <a href="{{ url('/usuario/'.$usuario->id.'/edit') }}" class="btn btn-warning">
-                                Editar
-                    </a>
-                    
-                    <br>
-                    <br>
-                
-                    <form action="{{ url('/usuario/'.$usuario->id) }}" class="b-inline" method="post">
-                    @csrf
-                    {{ method_field('DELETE') }}
-                    <input class="btn btn-danger" type="submit" onclick="return confirm('¿Quieres Borrar?')" 
-                    value="Borrar">
-
-                    </form>
-
-                </td>
-
-            </tr>
-            @endforeach
-    
-    </tbody>
-
-</table>
-
-{!! $usuarios->links() !!}
-
-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 @endsection
+

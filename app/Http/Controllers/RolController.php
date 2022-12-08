@@ -14,10 +14,10 @@ class RolController extends Controller
 
     function __construct() 
     {
-        $this->middleware('permission:ver-rol | crear-rol | editar-rol | borrar-rol', ['only'=>['index']]);
-        $this->middleware('permission:ver-rol | crear-rol', ['only'=>['create','store']]);
-        $this->middleware('permission:ver-rol | editar-rol', ['only'=>['edit','update']]);
-        $this->middleware('permission:ver-rol | borrar-rol', ['only'=>['destroy']]);
+        $this->middleware('permission:ver-rol|crear-rol|editar-rol|borrar-rol', ['only'=>['index']]);
+        $this->middleware('permission:crear-rol', ['only'=>['create','store']]);
+        $this->middleware('permission:editar-rol', ['only'=>['edit','update']]);
+        $this->middleware('permission:borrar-rol', ['only'=>['destroy']]);
     }
 
     /**
@@ -25,7 +25,7 @@ class RolController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
         $roles = Role::paginate(5); 
@@ -53,11 +53,15 @@ class RolController extends Controller
     public function store(Request $request)
     {
         //
-        $this->validate($request, ['name' => 'required', 'permission' => 'required']);
-        $role = Role::create(['name' => $request->input('name')]);   
-        $role->symcPermission($request->input('permission')); 
-
-        return redirect()->route('roles.index'); 
+        $this->validate($request, [
+            'name' => 'required|unique:roles,name',
+            'permission' => 'required',
+        ]);
+    
+        $role = Role::create(['name' => $request->input('name')]);
+        $role->syncPermissions($request->input('permission'));
+    
+        return redirect()->route('roles.index');; 
     }
 
     /**
@@ -82,8 +86,8 @@ class RolController extends Controller
         //
         $role = Role::find($id); 
         $permission = Permission::get();
-        $rolePermissions = DB::table('role_has_permissions'->where('role_has_permissions.role_id',$id))
-            ->pluck('role_has_permissions.permission_id','role_has_permissions.role_id')
+        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
+            ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();
         return view('roles.editar', compact('role', 'permission', 'rolePermissions'));
     }
@@ -116,7 +120,7 @@ class RolController extends Controller
     public function destroy($id)
     {
         //
-        DB::table('roles')->where('id', $id)->delete(); 
+        DB::table("roles")->where('id', $id)->delete(); 
         return redirect()->route('roles.index'); 
     }
 }

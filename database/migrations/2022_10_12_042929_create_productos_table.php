@@ -14,15 +14,13 @@ class CreateProductosTable extends Migration
     public function up()
     {
         Schema::create('productos', function(Blueprint $table) {
-            $table->bigIncrements('id'); 
-            $table->text('foto'); 
+            $table->id(); 
+            $table->string('imagen')->nullable(); 
             $table->string('clave', 100);
             $table->string('nombre', 100);
             $table->integer('cantidad');
-            $table->integer('costo');  
-            $table->integer('id_tipo');
-            $table->integer('id_tienda'); 
-            $table->boolean('activo');
+            $table->integer('costo'); 
+            //$table->boolean('activo');
             $table->timesTamps();   
         }); 
     }

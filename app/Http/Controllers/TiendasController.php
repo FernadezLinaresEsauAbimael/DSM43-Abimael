@@ -9,139 +9,56 @@ use Illuminate\Support\Facades\Storage;
 
 class TiendasController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function productos()
     {
-        //
-        $datos['tiendas']=Tiendas::paginate(20); 
-        return view('tienda.index',$datos );
+        $produc_a = Productos::all();
+        $produc_b = \DB::select('SELECT * FROM tiendas');
+        return view("lista_productos")
+        -> with(['productos1' => $produc_a])
+        -> with(['productos2' => $produc_b]);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-        return view('tienda.create'); 
+    
+    public function editar_productos(Productos $id){
+    
+        $tipo = Tipos::all();
+    return view("editar_productos")
+    ->with(['usuarios' => $id]) 
+    ->with(['nivel' => $tipo]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-        $campos=[
-            'clave'=>'required|string|max:100',
-            'nombre'=>'required|string|max:100',
-            'foto'=>'required|max:10000|mimes:jpeg,png,jpg'
-        ]; 
-
-        $mensaje=[
-            'required'=>'El :attribute es requerido',
-            'foto.required'=>'La foto es requerida',
-            'clave.required'=>'La clave es requerida'
-        ];
-
-        $this->validate($request, $campos, $mensaje);
-
-
-        //$datosTienda = $request->all(); 
-        $datosTienda = $request->except('_token'); 
-
-        if($request->hasFile('foto')) {
-            $datosTienda['foto']=$request->file('foto')->store('uploads','public');
-        } 
-
-        Tiendas::insert($datosTienda); 
-
-        //return response()->json($datosTienda);
-        return redirect('tienda')->with('mensaje','Tienda agregada con exito'); 
-                                 
-        
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Tiendas  $tiendas
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Tiendas $tiendas)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Tiendas  $tiendas
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-        $tienda=Tiendas::findOrfail($id); 
-        return view('tienda.edit', compact('tienda') ); 
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tiendas  $tiendas
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-        $datosTienda = request()->except(['_token','_method']);
-        
-        if($request->hasFile('foto')) {
-
-            $tienda=Tiendas::findOrfail($id);
-
-            Storage::delete(['public/'.$tienda->foto]);
-
-            $datosTienda['foto']=$request->file('foto')->store('uploads','public');
-        } 
-
-        Tiendas::where('id','=',$id)->update($datosTienda);  
-
-        $tienda=Tiendas::findOrfail($id); 
-        //return view('tienda.edit', compact('tienda') ); 
-
-        return redirect('tienda')->with('mensaje','Tienda Modificada');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Tiendas  $tiendas
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-        $tienda=Tiendas::findOrfail($id);
-
-        if(Storage::delete('public/'.$tienda->foto)) {
-
-            Tiendas::destroy($id); 
-
+    public function salvar_productos(Productos $id, Request $request){
+        $foto2 =  $request ->foto;
+        $query = Productos::find($id->id_producto);
+        $query->clave = trim(  $request->clave);
+        $query->nombre = trim(  $request->nombre);
+        $iniciales =  $query->cantidad ;
+    
+        if(isset($request->insumos)){
+            $insumo =  $request->insumos;
+            $real = $iniciales  -  $insumo;
         }
-
-      
-        return redirect('tienda')->with('mensaje','Tienda Eliminada');
+        elseif(isset($request->ingresos)){
+            $ingreso =  $request->ingresos;
+            $real = $iniciales  +  $ingreso;
+        }
+    
+        $query->cantidad = $real;
+        $query->nombre = trim(  $request->nombre);
+        $query->foto = $foto2;
+       
+        $query->save();
+        return redirect()->route("editar_productos", ['id' => $id->id_producto]);
+    
+    }
+    public function borrar_productos(Productos $id){
+    
+        \Storage::disk('local')->delete($id->foto);//bay foto del usuario
+       $id->delete();
+       return redirect()->route("lista_productos");
+    
+    }
+    public function detalle_productos($id){
+        $usuario = Productos::find($id);
+        return view("detalle_productos")
+        ->with(['detalle_productos' => $usuario]);
     }
 }

@@ -8,8 +8,6 @@
                         </div>
                     @endif
 
-
-
                     <!DOCTYPE html>
                     <html lang="es">
                         <head>

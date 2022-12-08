@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Maquinas;
-use Illuminate\Http\Request;
+use App\Models\Venta;
+use App\Http\Requests\StoreVentaRequest;
+use App\Http\Requests\UpdateVentaRequest;
 
-class MaquinasController extends Controller
+class VentaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -30,10 +31,10 @@ class MaquinasController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreVentaRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreVentaRequest $request)
     {
         //
     }
@@ -41,10 +42,10 @@ class MaquinasController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Maquinas  $maquinas
+     * @param  \App\Models\Venta  $venta
      * @return \Illuminate\Http\Response
      */
-    public function show(Maquinas $maquinas)
+    public function show(Venta $venta)
     {
         //
     }
@@ -52,10 +53,10 @@ class MaquinasController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Maquinas  $maquinas
+     * @param  \App\Models\Venta  $venta
      * @return \Illuminate\Http\Response
      */
-    public function edit(Maquinas $maquinas)
+    public function edit(Venta $venta)
     {
         //
     }
@@ -63,11 +64,11 @@ class MaquinasController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Maquinas  $maquinas
+     * @param  \App\Http\Requests\UpdateVentaRequest  $request
+     * @param  \App\Models\Venta  $venta
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Maquinas $maquinas)
+    public function update(UpdateVentaRequest $request, Venta $venta)
     {
         //
     }
@@ -75,10 +76,10 @@ class MaquinasController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Maquinas  $maquinas
+     * @param  \App\Models\Venta  $venta
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Maquinas $maquinas)
+    public function destroy(Venta $venta)
     {
         //
     }

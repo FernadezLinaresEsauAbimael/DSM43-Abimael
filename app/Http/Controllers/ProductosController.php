@@ -5,37 +5,32 @@ namespace App\Http\Controllers;
 use App\Models\Productos;
 use Illuminate\Http\Request;
 
+//agregamos
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\DB; 
 
-use Illuminate\Support\Facades\Storage;
 
 class ProductosController extends Controller
 {
 
     function __construct() 
     {
-        $this->middleware('permission:ver-productos | crear-productos | editar-productos | borrar-productos', ['only'=>['index']]);
-        $this->middleware('permission:ver-productos | crear-productos', ['only'=>['create','store']]);
-        $this->middleware('permission:ver-productos | editar-productos', ['only'=>['edit','update']]);
-        $this->middleware('permission:ver-productos | borrar-productos', ['only'=>['destroy']]);
+        $this->middleware('permission:ver-productos|crear-productos|editar-productos|borrar-productos')->only('index');
+        $this->middleware('permission:crear-productos', ['only'=>['create','store']]);
+        $this->middleware('permission:editar-productos', ['only'=>['edit','update']]);
+        $this->middleware('permission:borrar-productos', ['only'=>['destroy']]);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
+
     public function index()
     {
         //
-        $datos['productos']=Productos::paginate(3); 
-        return view('producto.index',$datos ); 
+        $productos= Productos::paginate(5); 
+        return view('producto.index', compact('productos') ); 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
@@ -43,114 +38,99 @@ class ProductosController extends Controller
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
-        $campos=[
-            'clave'=>'required|string|max:100',
-            'nombre'=>'required|string|max:100',
-            'cantidad'=>'required|string|max:100',
-            'costo'=>'required|string|max:1000',
-            'id_tipo'=>'required|integer',
-            'id_tienda'=>'required|integer',
-            'foto'=>'required|max:10000|mimes:jpeg,png,jpg',
-            'activo'=>'required|boolean|max:100'
-        ]; 
+        request()->validate([
+            'clave'=>'required',
+            'imagen' => 'required|imagen|mimes:jpeg,png,svg|max:2048',
+            'nombre'=>'required',
+            'cantidad'=>'required',
+            'costo'=>'required',
+        ]); 
+ 
+       $input = $request->all();
 
-        $mensaje=[
-            'required'=>'El :attribute es requerido',
-            'foto.required'=>'La foto es requerida',
-            'clave.required'=>'La clave es requerida',
-            'cantidad.required'=>'La cantidad es requerida'
-        ]; 
+       if ($imagen = $request->file('imagen')) {
+           $destinationPath = 'Archivos/'; 
+           $profileImagen = date('YmdHis') . "." . $imagen->getClientOriginalExtension();
+           $image->move($destinationPath, $profileImagen);
+           $input['imagen'] = "$profileImagen"; 
+       }
 
-        
+       Producto::create($input); 
 
-        $this->validate($request, $campos, $mensaje);
+       return redirect()->route('index');
 
-
-        //$datosProducto = $request->all(); 
-        $datosProducto = $request->except('_token'); 
-
-        if($request->hasFile('foto')) {
-            $datosProducto['foto']=$request->file('foto')->store('uploads','public');
-        } 
-
-        Productos::insert($datosProducto); 
-
-        //return response()->json($datosProducto);
-        return redirect('producto')->with('mensaje','Producto agregado con exito');
+        //Producto::create($request->all());
+        //Producto::create($input); 
+        //return redirect()->route('producto.index');
 
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Productos  $productos
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Productos $productos)
+    public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Productos  $productos
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
         $producto=Productos::findOrfail($id); 
-        return view('producto.edit', compact('producto') ); 
+        return view('producto.edit', compact('producto')); 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Productos  $productos
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+
+    public function update(Request $request, Productos $producto)
     {
         //
-        $datosProducto = request()->except(['_token','_method']);
-        
-        if($request->hasFile('foto')) {
 
-            $producto=Productos::findOrfail($id);
+      /*   request()->validate([
+            'clave'=>'required|string|max:100',
+            'imagen' => 'required|imagen|mimes:jpeg,png,svg|max:2048',
+            'nombre'=>'required|string|max:100',
+            'cantidad'=>'required|string|max:100',
+            'costo'=>'required|string|max:1000',
+        ]);  */
 
-            Storage::delete(['public/'.$producto->foto]);
-
-            $datosProducto['foto']=$request->file('foto')->store('uploads','public');
-        } 
-
-        Productos::where('id','=',$id)->update($datosProducto);  
-
-        $producto=Productos::findOrfail($id); 
-        //return view('usuario.edit', compact('usuario') ); 
-
-        return redirect('producto')->with('mensaje','Producto Modificado');
+       // $producto->update($request->all());
+       $query = Productos::find($producto->id);
+       $query->id = trim(  $request->id);
+       $query->clave = trim(  $request->clave);
+       $foto2 =  $request ->imagen;
+   
+       $query->nombre = trim(  $request->nombre);
+       $query->costo = trim(  $request->costo);
+   
+       $iniciales =  $query->cantidad ;
+   
+       if(isset($request->insumos)){
+           $insumo =  $request->insumos;
+           $real = $iniciales  -  $insumo;
+       }
+       elseif(isset($request->ingresos)){
+           $ingreso =  $request->ingresos;
+           $real = $iniciales  +  $ingreso;
+       }
+   
+       $query->cantidad = $real;
+       $query->imagen = $foto2;
+      
+       $query->save();
+        return redirect()->route('producto.index'); 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Productos  $productos
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         //
+        /*
         $producto=Productos::findOrfail($id);
 
         if(Storage::delete('public/'.$producto->foto)) {
@@ -158,8 +138,10 @@ class ProductosController extends Controller
             Productos::destroy($id); 
 
         }
+        */
 
+        Productos::destroy($id); 
       
-        return redirect('producto')->with('mensaje','Producto Eliminado');
+        return redirect()->route('producto.index');
     }
 }

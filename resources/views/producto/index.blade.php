@@ -1,223 +1,190 @@
-@extends('adminlte::page')
-
-@section('title', 'Productos')
-
-@section('content_header')
-    <h1>Productos</h1>
-@stop
+@extends('layouts.app')
 
 @section('content')
-<div class="container">
+    <section class="section">
+        <div class="section-header">
+            <h3 class="page__heading">Productos</h3>
+        </div>
+        <div class="section-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="text-center"></h3>
 
-    @if(Session::has('mensaje'))
-    <div class="alert alert-success alert-dsmissible" rote="alert">
-        {{ Session::get('mensaje') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    @endif
-<head>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <head/>
-
-<a href="{{ url('producto/create') }}" class="btn btn-success" > Registrar un nuevo Producto</a>
-<br/>
-<br/>
-
-<table class="table table-light">
-
-    <thead class="thead-light">
-
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-
-        <tr>
-            <th>Id</th>
-            <th>Foto</th>
-            <th>Clave</th>
-            <th>Nombre</th>
-            <th>Cantidad</th>
-            <th>Costo</th>
-            <th>Id_tipo</th>
-            <th>Id_tienda</th>
-            <th>Activo</th>
-            <th>Acciones</th>
-        </tr>
-
-    </thead>
-
-    <tbody>
-        @foreach( $productos as $producto )
-        <!-- 
+                            @can('crear-producto')
+                            <a class="btn btn-warning" href="{{ route('producto.create') }}">Nuevo</a>
+                            @endcan
+<br>
+                            <table class="table table-striped mt-2">
+                                <thead style="background-color: #77ef";>
+                                    <th style="color: #fff;">ID</th>
+                                    <th style="color: #fff;">Clave</th>
+                                    <th style="color: #fff;">Imagen</th>
+                                    <th style="color: #fff;">Nombre</th>
+                                    <th style="color: #fff;">Cantidad</th>
+                                    <th style="color: #fff;">Costo</th>
+                                    <th style="color: #fff;">Acciones</th>
+                                </thead>
+                                <tbody>
+                                    @foreach($productos as $producto)
 
 
-    AQUI EMPIEZA EL CODIGO GEMELUSKI
-    
-     -->
-        @if($producto -> nombre == "Salsa Verde" )  
-    @if( $producto -> cantidad < 20 )
-    <div class="alert alert-danger" role="alert">
+                            
+                             
+       @if($producto -> nombre == "Salsa Verde" )  
+   @if( $producto -> cantidad < 20 )
+   <div class="alert alert-danger" role="alert">
 <i>URGENTE !ESTA POR AGOTARSE {{$producto -> nombre   }}</i>
-    </div>
-    @elseif( $producto -> cantidad > 20 and $producto -> cantidad < 60 )
-    <div class="alert alert-warning" role="alert">
-    <i>ATENTO SE COMIENZA A AGOTAR{{$producto -> nombre   }}</i>
-    </div>
+   </div>
+   @elseif( $producto -> cantidad > 20 and $producto -> cantidad < 60 )
+   <div class="alert alert-warning" role="alert">
+   <i>ATENTO SE COMIENZA A AGOTAR{{$producto -> nombre   }}</i>
+   </div>
 
-    @elseif( $producto -> cantidad > 30 )
-     
+   @elseif( $producto -> cantidad > 30 )
     
-    @endif 
-    @endif
-
-
-
-
-    @if($producto -> nombre == "Salsa Roja" )  
-    @if( $producto -> cantidad < 20)
-    <div class="alert alert-danger" role="alert">
-<i>URGENTE !ESTA POR AGOTARSE {{$producto -> nombre   }}</i>
-    </div>
-    @elseif( $producto -> cantidad > 20 and $producto -> cantidad < 30 )
-    <div class="alert alert-warning" role="alert">
-    <i>ATENTO SE COMIENZA A AGOTAR{{$producto -> nombre   }}</i>
-    </div>
-
-    @elseif( $producto -> cantidad > 30 )
-     
-    
-    @endif 
-    @endif
-
-
-
-    @if($producto -> nombre == "Totopos" )  
-    @if( $producto -> cantidad < 30)
-    <div class="alert alert-danger" role="alert">
-<i>URGENTE !ESTA POR AGOTARSE {{$producto -> nombre   }}</i>
-    </div>
-    @elseif( $producto -> cantidad > 30 and $producto -> cantidad < 60 )
-    <div class="alert alert-warning" role="alert">
-    <i>ATENTO SE COMIENZA A AGOTAR{{$producto -> nombre   }}</i>
-    </div>
-
-    @elseif( $producto -> cantidad > 60 )
-    
-    @endif 
-    @endif
-
-
-
-
-    @if($producto -> nombre == "Tortillas" )  
-    @if( $producto -> cantidad < 20)
-    <div class="alert alert-danger" role="alert">
-<i>URGENTE !ESTA POR AGOTARSE {{$producto -> nombre   }}</i>
-    </div>
-    @elseif( $producto -> cantidad > 20 and $producto -> cantidad < 40 )
-    <div class="alert alert-warning" role="alert">
-    <i>ATENTO SE COMIENZA A AGOTAR{{$producto -> nombre   }}</i>
-    </div>
-
-    @elseif( $producto -> cantidad > 40 )
    
-    @endif 
-    @endif
+   @endif 
+   @endif
 
 
-
-
-    @if($producto -> nombre == "Masa" )  
-    @if( $producto -> cantidad < 80)
-    <div class="alert alert-danger" role="alert">
+   @if($producto -> nombre == "Salsa Roja" )  
+   @if( $producto -> cantidad < 20)
+   <div class="alert alert-danger" role="alert">
 <i>URGENTE !ESTA POR AGOTARSE {{$producto -> nombre   }}</i>
-    </div>
-    @elseif( $producto -> cantidad > 80 and $producto -> cantidad < 120 )
-    <div class="alert alert-warning" role="alert">
-    <i>ATENTO SE COMIENZA A AGOTAR {{$producto -> nombre   }}</i>
-    </div>
+   </div>
+   @elseif( $producto -> cantidad > 20 and $producto -> cantidad < 30 )
+   <div class="alert alert-warning" role="alert">
+   <i>ATENTO SE COMIENZA A AGOTAR{{$producto -> nombre   }}</i>
+   </div>
 
-    @elseif( $producto -> cantidad > 120 )
+   @elseif( $producto -> cantidad > 30 )
     
-    
-    @endif 
-    @endif
+   
+   @endif 
+   @endif
+
+
+
+   @if($producto -> nombre == "Totopos" )  
+   @if( $producto -> cantidad < 30)
+   <div class="alert alert-danger" role="alert">
+<i>URGENTE !ESTA POR AGOTARSE {{$producto -> nombre   }}</i>
+   </div>
+   @elseif( $producto -> cantidad > 30 and $producto -> cantidad < 60 )
+   <div class="alert alert-warning" role="alert">
+   <i>ATENTO SE COMIENZA A AGOTAR{{$producto -> nombre   }}</i>
+   </div>
+
+   @elseif( $producto -> cantidad > 60 )
+   
+   @endif 
+   @endif
+
+
+
+
+   @if($producto -> nombre == "Tortillas" )  
+   @if( $producto -> cantidad < 20)
+   <div class="alert alert-danger" role="alert">
+<i>URGENTE !ESTA POR AGOTARSE {{$producto -> nombre   }}</i>
+   </div>
+   @elseif( $producto -> cantidad > 20 and $producto -> cantidad < 40 )
+   <div class="alert alert-warning" role="alert">
+   <i>ATENTO SE COMIENZA A AGOTAR{{$producto -> nombre   }}</i>
+   </div>
+
+   @elseif( $producto -> cantidad > 40 )
+  
+   @endif 
+   @endif
+
+
+
+
+   @if($producto -> nombre == "Masa" )  
+   @if( $producto -> cantidad < 80)
+   <div class="alert alert-danger" role="alert">
+<i>URGENTE !ESTA POR AGOTARSE {{$producto -> nombre   }}</i>
+   </div>
+   @elseif( $producto -> cantidad > 80 and $producto -> cantidad < 120 )
+   <div class="alert alert-warning" role="alert">
+   <i>ATENTO SE COMIENZA A AGOTAR {{$producto -> nombre   }}</i>
+   </div>
+
+   @elseif( $producto -> cantidad > 120 )
+   
+   
+   @endif 
+   @endif
 
 
 
 
 <!--     @if($producto -> nombre == "maiz" ) 
-    @if( $producto -> cantidad < 200)
-    <div class="alert alert-danger" role="alert">
+   @if( $producto -> cantidad < 200)
+   <div class="alert alert-danger" role="alert">
 <i>URGENTE !ESTA POR AGOTARSE {{$producto -> nombre   }}</i>
-    </div>
-    @elseif( $producto -> cantidad > 200 and $producto -> cantidad < 250 )
-    <div class="alert alert-warning" role="alert">
-    <i>ATENTO SE COMIENZA A AGOTAR{{$producto -> nombre   }}</i>
-    </div>
-
-    @elseif( $producto -> cantidad > 300 )
+   </div>
+   @elseif( $producto -> cantidad > 200 and $producto -> cantidad < 250 )
+   <div class="alert alert-warning" role="alert">
+   <i>ATENTO SE COMIENZA A AGOTAR{{$producto -> nombre   }}</i>
+   </div>
+   @elseif( $producto -> cantidad > 300 )
+  
    
-    
-    @endif 
-    @endif
- -->
+   @endif 
+   @endif
+-->
 <!-- AQUI TERMINA -->
 
 
+                                        <tr>
+                                            <td>{{ $producto->id }}</td>
+                                            <td>{{ $producto->clave }}</td>
+                                            
+                                            <td><img src="{{ asset ('Archivos/'.$producto->foto)   }}" style="width:50px"></td>
+                                        
+                                            <td>{{ $producto->nombre }}</td>
+                                            <td>{{ $producto->cantidad }}</td>
+                                            <td>$ {{ $producto->costo }}</td>
+                                            <td>
+                                                <form action="{{ route('producto.destroy',$producto->id) }}" method="POST">
 
-        <tr>
-        
-            <td>{{ $producto->id }}</td>
-            <td>
-                <img class="img-thumbnail img-fluid" src="{{ asset('Archivos').'/'.$producto->foto }}" width="100" alt="">  
-            </td>
 
-            <td>{{ $producto->clave }}</td>
-            <td>{{ $producto->nombre }}</td>
-            <td>{{ $producto->cantidad }}</td>
-            <td>{{ $producto->costo }}</td>
-            <td>{{ $producto->id_tipo }}</td>
-            <td>{{ $producto->id_tienda }}</td>
-            <td>{{ $producto->activo }}</td>
-            
-            <td>
+                                                @can('editar-producto')
+                                                <a class="btn btn-primary" href="{{ route('producto.edit',$producto->id) }}">Editar</a>
+                                                @endcan
+                                                
+                                                @csrf
+                                                @method('DELETE')
+                                                @can('borrar-producto')
+                                                <button type="submit" class="btn btn-danger">Borrar</button>
+                                                @endcan
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <div class="pagination justify-content-end">
+                            {!! $productos->links() !!}
 
-                    <a href="{{ url('/producto/'.$producto->id.'/edit') }}" class="btn btn-warning">
-                                Editar
-                    </a>
-                    
-                    <br>
-                    <br>
-                
-                    <form action="{{ url('/producto/'.$producto->id) }}" class="b-inline" method="post">
-                    @csrf
-                    {{ method_field('DELETE') }}
-                    <input class="btn btn-danger" type="submit" onclick="return confirm('¿Quieres Borrar?')" 
-                    value="Borrar">
 
-                    </form>
-
-                </td>
-
-        </tr>
-        @endforeach
-
-    </tbody>
-
-</table>
-{!! $productos->links() !!}
-
-<script>
+                            <script>
 window.setTimeout(function() {
     $(".alert").fadeTo(1000, 0).slideUp(500, function(){
         $(this).remove(); 
     });
 }, 5000);
-
-
 </script>
-
-
-</div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 @endsection
+

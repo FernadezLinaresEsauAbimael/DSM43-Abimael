@@ -13,13 +13,20 @@ class CreateTiendasTable extends Migration
      */
     public function up()
     {
-        Schema::create('tiendas', function (Blueprint $table) {
-            $table->bigIncrements('id'); 
-            $table->string('clave', 100);
-            $table->string('nombre', 100);
-            $table->timesTamps(); 
-            $table->text('foto');   
-        }); 
+        schema::create('tiendas', function (Blueprint $table){
+            $table->bigincrements('id');
+            $table->string('clave', 30);
+            $table->string('nombre', 50);
+            $table->string('cantidad');
+            $table->text('foto')->nullable();
+            $table->decimal('costo');
+            //$table->string('id_tipo');
+            //$table->string('id_tienda');
+         /*    $table->timestamps(); */
+
+
+         
+        });
     }
 
     /**
